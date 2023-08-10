@@ -21,7 +21,7 @@ async function fetchLatestNews() {
         url,
       });
     });
-    console.log("LATEST NEWS FETCHED", latestNews.length);
+    console.log("LATEST NEWS FETCHED", latestNews);
     return latestNews;
   } catch (error) {
     console.log(error);
