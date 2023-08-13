@@ -1,8 +1,8 @@
 # Name and metadata of your task
-task_name: "Your-task-name"
+task_name: "news-web-scraper"
 author: "koii"
-description: "This will be description of your task"
-repositoryUrl: "https://github.com/koii-network/task-examples"
+description: "Scraps the latest news from CoinMarketCap website"
+repositoryUrl: "https://github.com/Giftea/web-scraper"
 imageUrl: "imageUrl"
 
 # network value can be DEVELOPMENT , ARWEAVE or IPFS, Recommended IPFS as the cli automatically takes care of uploading the executable with the help of web3.js key

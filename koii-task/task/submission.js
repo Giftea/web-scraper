@@ -24,10 +24,10 @@ class Submission {
         });
       });
 
-      if (latestNews.length !== 0) {
+      if (latestNews !== null && latestNews.length !== 0) {
         // store value on NeDB
         await namespaceWrapper.storeSet('value', JSON.stringify(latestNews));
-        // console.log('LATEST NEWS FETCHED', latestNews);
+        console.log('LATEST NEWS FETCHED', latestNews);
       }
       return JSON.stringify(latestNews);
     } catch (err) {

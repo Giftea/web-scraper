@@ -8,7 +8,7 @@ class Audit {
     let vote;
     console.log('SUBMISSION VALUE', submission_value, round);
     try {
-      if (JSON.parse(submission_value).length > 15) {
+      if (JSON.parse(submission_value) !== null && JSON.parse(submission_value).length !== 0) {
         // For successful flow we return true (Means the audited node submission is correct)
         vote = true;
       } else {
@@ -19,7 +19,7 @@ class Audit {
       console.error(e);
       vote = false;
     }
-
+    
     return vote;
   }
 
