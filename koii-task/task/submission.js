@@ -1,6 +1,14 @@
+require('dotenv').config();
 const { namespaceWrapper } = require('../_koiiNode/koiiNode');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const fs = require('fs');
+const createFile = require('../helpers/createFile');
+const deleteFile = require('../helpers/deleteFile');
+const { Web3Storage, getFilesFromPath } = require('web3.storage');
+const storageClient = new Web3Storage({
+  token: process.env.SECRET_WEB3_STORAGE_KEY,
+});
 
 class Submission {
   async task(round) {
@@ -11,6 +19,7 @@ class Submission {
     try {
       const URL = 'https://coinmarketcap.com/headlines/news';
       const latestNews = [];
+      let proof_cid;
       const response = await axios(URL);
       const html = response.data;
       const $ = cheerio.load(html);
@@ -25,11 +34,28 @@ class Submission {
       });
 
       if (latestNews !== null && latestNews.length !== 0) {
-        // store value on NeDB
-        await namespaceWrapper.storeSet('value', JSON.stringify(latestNews));
-        console.log('LATEST NEWS FETCHED', latestNews);
+        const path = `./Latest_news/proofs.json`;
+
+        if (!fs.existsSync('./Latest_news')) fs.mkdirSync('./Latest_news');
+        console.log('PATH', path);
+        await createFile(path, latestNews);
+
+        if (storageClient) {
+          const file = await getFilesFromPath(path);
+          proof_cid = await storageClient.put(file);
+          console.log('User Linktrees proof uploaded to IPFS: ', proof_cid);
+
+          // deleting the file from fs once it is uploaded to IPFS
+          await deleteFile(path);
+
+          // store value on NeDB
+          await namespaceWrapper.storeSet('value', JSON.stringify(proof_cid));
+          console.log('LATEST NEWS CID', proof_cid);
+        } else {
+          console.log('NODE DO NOT HAVE ACCESS TO WEB3.STORAGE');
+        }
       }
-      return JSON.stringify(latestNews);
+      return proof_cid;
     } catch (err) {
       console.log('ERROR IN EXECUTING TASK', err);
       return 'ERROR IN EXECUTING TASK' + err;

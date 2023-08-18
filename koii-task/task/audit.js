@@ -1,4 +1,5 @@
 const { namespaceWrapper } = require('../_koiiNode/koiiNode');
+const dataFromCid = require('../helpers/dataFromCid');
 
 class Audit {
   async validateNode(submission_value, round) {
@@ -7,8 +8,13 @@ class Audit {
     // The sample logic can be something like mentioned below to validate the submission
     let vote;
     console.log('SUBMISSION VALUE', submission_value, round);
+    const output = await dataFromCid(submission_value);
+
     try {
-      if (JSON.parse(submission_value) !== null && JSON.parse(submission_value).length !== 0) {
+      if (
+        output !== false &&
+        JSON.parse(output).length > 15
+      ) {
         // For successful flow we return true (Means the audited node submission is correct)
         vote = true;
       } else {
@@ -19,7 +25,7 @@ class Audit {
       console.error(e);
       vote = false;
     }
-    
+
     return vote;
   }
 
