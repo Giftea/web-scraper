@@ -1,11 +1,30 @@
 require('dotenv').config();
 const axios = require('axios');
-const { Web3Storage, getFilesFromPath } = require('web3.storage');
+const { Web3Storage } = require('web3.storage');
 const storageClient = new Web3Storage({
   token: process.env.SECRET_WEB3_STORAGE_KEY,
 });
+const fsPromise = require('fs/promises');
 
-module.exports = async function dataFromCid(cid) {
+// Create File
+export async function createFile(path, data) {
+  await fsPromise.writeFile(path, JSON.stringify(data), err => {
+    if (err) {
+      console.error(err);
+    }
+  });
+}
+
+// Delete File
+export async function deleteFile(path) {
+  await fsPromise.unlink(path, err => {
+    if (err) {
+      console.error(err);
+    }
+  });
+}
+
+export async function dataFromCid(cid) {
   console.log('CID', cid);
   if (storageClient) {
     const res = await storageClient.get(cid.replace(/['"]/g, ''));
@@ -28,4 +47,4 @@ module.exports = async function dataFromCid(cid) {
       return false;
     }
   }
-};
+}

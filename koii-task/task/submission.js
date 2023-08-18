@@ -3,8 +3,7 @@ const { namespaceWrapper } = require('../_koiiNode/koiiNode');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
-const createFile = require('../helpers/createFile');
-const deleteFile = require('../helpers/deleteFile');
+const { createFile, deleteFile } = require('../helpers');
 const { Web3Storage, getFilesFromPath } = require('web3.storage');
 const storageClient = new Web3Storage({
   token: process.env.SECRET_WEB3_STORAGE_KEY,
@@ -12,10 +11,6 @@ const storageClient = new Web3Storage({
 
 class Submission {
   async task(round) {
-    // Write the logic to do the work required for submitting the values and optionally store the result in levelDB
-
-    // Below is just a sample of work that a task can do
-
     try {
       const URL = 'https://coinmarketcap.com/headlines/news';
       const latestNews = [];
